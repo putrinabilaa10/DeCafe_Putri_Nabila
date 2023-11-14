@@ -1,5 +1,5 @@
 <?php
-include("proses/connect.php");
+include "proses/connect.php";
 $query = mysqli_query($conn, "SELECT * FROM tb_user");
 
 while ($row = mysqli_fetch_array($query)) {
@@ -41,7 +41,7 @@ while ($row = mysqli_fetch_array($query)) {
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="username" required>
+                                            <input  type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="username" required>
                                             <label for="floatingInput">username</label>
                                             <div class="invalid-feedback">
                                                 Masukkan username.
@@ -53,7 +53,7 @@ while ($row = mysqli_fetch_array($query)) {
                                     <div class="col-lg-4">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" aria-label="Default select example" name="level" required>
-                                                <option selected hidden value="0">Pilih level user</option>
+                                                <option selected hidden value="">Pilih level user</option>
                                                 <option value="1">Owner/Admin</option>
                                                 <option value="2">kasir</option>
                                                 <option value="3">Pelayan</option>
@@ -78,7 +78,8 @@ while ($row = mysqli_fetch_array($query)) {
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="form-floating mb-3">
-                                            <input type="Password" class="form-control" id="floatingInput" placeholder="Password" disabled value="12345" name="password">
+                                            <input type="Password" class="form-control" id="floatingInput" placeholder="Password" 
+                                            disabled value="12345" name="password">
                                             <label for="floatingPassword">Password</label>
                                         </div>
                                     </div>
@@ -185,7 +186,8 @@ while ($row = mysqli_fetch_array($query)) {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="needs-validation" novalidate action="proses/prosses_edit_user.php" method="POST">
+                                <form class="needs-validation" novalidate action="proses/prosses_edit_user.php"
+                                 method="POST">
                                     <input type="hidden" value="<?php echo $row['id'] ?>" name="id">
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -258,7 +260,7 @@ while ($row = mysqli_fetch_array($query)) {
                     <div class="modal-dialog modal-md modal-fullscreen-md-down">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete User</h1>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete data User</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -274,8 +276,10 @@ while ($row = mysqli_fetch_array($query)) {
                                         ?>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-danger" name="delete_user_validate" value="12345" <?php echo ($row['username']==$_SESSION['username_decafe']) ? 'disabled' : '';?>>Hapus</button>
+                                        <button type="button" class="btn btn-secondary" 
+                                        data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger" name="delete_user_validate" value="12345"
+                                        <?php echo ($row['username']==$_SESSION['username_decafe']) ? 'disabled' : ''; ?>>Hapus</button>
                                     </div>
                                 </form>
                             </div>
@@ -283,6 +287,42 @@ while ($row = mysqli_fetch_array($query)) {
                     </div>
                 </div>
                 <!-- end Delete-->
+
+                
+                 <!-- Resert Password -->
+                 <div class="modal fade" id="Modalresetpassword<?php echo $row['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-md modal-fullscreen-md-down">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Resert password</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="needs-validation" novalidate action="proses/prosses_resert_password.php" 
+                                method="POST">
+                                    <input type="hidden" value="<?php echo $row['id'] ?>" name="id">
+                                    <div class="col-lg-12">
+                                        <?php 
+                                        if($row['username']==$_SESSION['username_decafe']){
+                                            echo "<div class='alert alert-danger'>Anda Tidak Dapat meresert password Sendiri</div>";
+                                        }else{
+                                            echo "Apakah Anda Yakin Ingin meresetr password user <b>$row[username]</b> 
+                                            menjadi password bawaan sistem yaitu <b>password</b>";
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-succsess" name="delete_user_validate" value="12345"
+                                         <?php echo ($row['username']==$_SESSION['username_decafe']) ? 'disabled' : '';?>>Resert password</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end Resert Delete-->
+
 
             <?php
             }
@@ -335,39 +375,25 @@ while ($row = mysqli_fetch_array($query)) {
                                         <?php echo $row['nohp'] ?>
                                     </td>
                                     <td class="d-flex">
-                                        <button class="btn btn-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#ModalView<?php echo $row['id'] ?>"><i class="bi bi-eye"></i></button>
-                                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#ModalEdit<?php echo $row['id'] ?>"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-danger btn-sm me-" data-bs-toggle="modal" data-bs-target="#ModalDelete<?php echo $row['id'] ?>"><i class="bi bi-trash3"></i></button>
+                                        <button class="btn btn-info btn-sm me-2" data-bs-toggle="modal"
+                                         data-bs-target="#ModalView<?php echo $row['id'] ?>"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" 
+                                        data-bs-target="#ModalEdit<?php echo $row['id'] ?>"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-danger btn-sm me-1" data-bs-toggle="modal"
+                                         data-bs-target="#ModalDelete<?php echo $row['id'] ?>"><i class="bi bi-trash3"></i></button>
+                                         <button class="btn btn-secondary btn-sm me-" data-bs-toggle="modal"
+                                         data-bs-target="#Modalresetpassword<?php echo $row['id'] ?>"><i class="bi bi-key"></i></button>
                                     </td>
                                 </tr>
-                            <?php } ?>
+                            <?php
+                         } 
+                         ?>
                         </tbody>
                     </table>
                 </div>
-            <?php } ?>
+            <?php
+         } 
+         ?>
         </div>
     </div>
 </div>
-
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (() => {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
